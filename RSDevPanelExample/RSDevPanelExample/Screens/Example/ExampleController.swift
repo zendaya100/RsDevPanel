@@ -14,13 +14,11 @@ class ExampleController: BaseController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureNavigationItem()
         configure()
     }
 
-    private func configureNavigationItem() {
-        title = "Example"
-        navigationItem.title = "Example"
+    override func configureNavBar() {
+        title = "Example VC"
     }
 
     private func configure() {
@@ -37,25 +35,5 @@ class ExampleController: BaseController {
         DispatchQueue.main.asyncAfter(deadline: .now()+0.2) {
             RSDevPanel.shared.toggleShow()
         }
-    }
-
-
-}
-
-
-class TestElement: RSDevPanelBaseElement {
-
-
-    override var id: String {
-        "Sdf"
-    }
-
-    override func getView() -> UIView {
-        UIView()
-    }
-    override func viewWillAppear() {
-//        infoView?.set(text: "Sdf")
-//        infoView?.show()
-        
     }
 }
