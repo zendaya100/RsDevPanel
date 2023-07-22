@@ -13,6 +13,10 @@ final class SecondViewController: BaseController {
         configureDevPanel()
     }
 
+    override func configureNavBar() {
+        title = "Second VC"
+    }
+
     private func configure() {
         view.backgroundColor = .gray
     }
@@ -49,7 +53,6 @@ class MyTotoro: RSDevPanelBaseElement {
     override func getView() -> UIView {
         view
     }
-
 }
 
 // Additionally, you can extend the RSDevPanelFastAdd class to quickly add an element
