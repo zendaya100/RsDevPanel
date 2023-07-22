@@ -148,6 +148,9 @@ extension RSDevPanelFastAdd {
     }
 }
 ```
+Result:
+
+![RSDevPanelMyTotoro](https://github.com/roshiki/RsDevPanel/assets/9011106/917d1b11-dc7e-4404-916e-767b7da9b316)
 
 ## Requirements
 
