@@ -18,12 +18,44 @@ final class SecondViewController: BaseController {
     }
 
     private func configureDevPanel() {
-        RSDevPanel.shared.addButton(RSDevPanelButtonElementConfig(title: "Make yellow", action: { [weak self] in
+        RSDevPanel.add(.button(.init(title: "Make yellow", action: { [weak self] in
             self?.view.backgroundColor = .yellow
-        }), holder: self)
+        }), self))
 
-        RSDevPanel.shared.addElement(RSDevPanelButtonElement(RSDevPanelButtonElementConfig(title: "Close VC2", action: { [weak self] in
+        RSDevPanel.add(.button(.init(title: "Close VC2", action: { [weak self] in
             self?.dismiss(animated: true)
-        }), holder: self))
+        }), self))
+
+        // Custom created element
+        RSDevPanel.add(.myTotoro(holder: self))
+    }
+}
+
+
+// MARK: - Make own element easy!
+
+class MyTotoro: RSDevPanelBaseElement {
+    override var id: String { "totoro" }
+
+    private let view: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textColor = .gray
+        label.textAlignment = .center
+        label.text = "\nI am your Totoro!\nThis is a user-created element.\n"
+        return label
+    }()
+
+    override func getView() -> UIView {
+        view
+    }
+
+}
+
+// Additionally, you can extend the RSDevPanelFastAdd class to quickly add an element
+extension RSDevPanelFastAdd {
+    static func myTotoro(holder: AnyObject) -> RSDevPanelFastAdd {
+        let element = MyTotoro(holder: holder)
+        return Self(element: element)
     }
 }

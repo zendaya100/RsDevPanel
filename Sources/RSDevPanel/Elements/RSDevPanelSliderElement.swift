@@ -14,9 +14,11 @@ public class RSDevPanelSliderElement: RSDevPanelBaseElement {
     private let config: RSDevPanelSliderElementConfig
 
     // MARK: - Inits
-    
+ 
     /// Slider element initializer
-    /// - Parameter config: slider configuration
+    /// - Parameters:
+    ///   - config: slider configuration
+    ///   - holder: element holder
     public init(_ config: RSDevPanelSliderElementConfig, holder: AnyObject) {
         self.config = config
         super.init(holder: holder)

@@ -17,11 +17,15 @@ public class RSDevPanelNewsElement: RSDevPanelBaseElement {
 
     // MARK: - Inits
 
-    public init(source: RSDevPanelNewsSource, count: Int, holder: AnyObject) {
-        self.source = source
+    /// News element initializer
+    /// - Parameters:
+    ///   - config: news configuration
+    ///   - holder: element holder
+    public init(config: RSDevPanelNewsElementConfig, holder: AnyObject) {
+        self.source = config.source
         super.init(holder: holder)
         xmldelegate.delegate = self
-        xmldelegate.count = count
+        xmldelegate.count = config.count
     }
 
     // MARK: - Overrides

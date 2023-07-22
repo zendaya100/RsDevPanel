@@ -14,9 +14,11 @@ public class RSDevPanelButtonElement: RSDevPanelBaseElement {
     private let config: RSDevPanelButtonElementConfig
 
     // MARK: - Inits
-
+    
     /// Button element initializer
-    /// - Parameter config: button configuration
+    /// - Parameters:
+    ///   - config: button configuration
+    ///   - holder: element holder
     public init(_ config: RSDevPanelButtonElementConfig, holder: AnyObject) {
         self.config = config
         super.init(holder: holder)

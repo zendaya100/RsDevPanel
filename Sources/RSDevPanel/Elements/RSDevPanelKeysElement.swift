@@ -24,7 +24,9 @@ public class RSDevPanelKeysElement: RSDevPanelBaseElement {
     // MARK: - Inits
 
     /// Element initializer - a group of horizontal buttons
-    /// - Parameter configs: button configurations
+    /// - Parameters:
+    ///   - configs: button configurations
+    ///   - holder: element holder
     public init(_ configs: [RSDevPanelButtonElementConfig], holder: AnyObject) {
         self.configs = configs
         super.init(holder: holder)

@@ -4,6 +4,9 @@ protocol RSDevPanelDisplayLogic: AnyObject {
     func display(state: RDDevPanelDataFlow.ViewModel)
 }
 
+/// Short alias
+public typealias RSDP = RSDevPanel
+
 /// Developer Panel
 public class RSDevPanel {
 
@@ -74,24 +77,18 @@ public class RSDevPanel {
         }
     }
 
-    /// Add Button
-    /// Simplified use of `addElement`
-    /// - Parameters:
-    ///   - config: element configuration
-    ///   - holder: the element will be displayed as long as its holder exists
-    public func addButton(_ config: RSDevPanelButtonElementConfig, holder: AnyObject) {
-        let element = RSDevPanelButtonElement(config, holder: holder)
-        addElement(element)
+    /// Method for quickly adding elements
+    /// - Parameter item: added element
+    public func add(_ item: RSDevPanelFastAdd) {
+        addElement(item.element)
     }
 
-    /// Add Slider
-    /// Simplified use of `addElement`
-    /// - Parameters:
-    ///   - config: element configuration
-    ///   - holder: the element will be displayed as long as its holder exists
-    public func addSlider(_ config: RSDevPanelSliderElementConfig, holder: AnyObject) {
-        let element = RSDevPanelSliderElement(config, holder: holder)
-        addElement(element)
+    // MARK: - Static public functions
+
+    /// Method for quickly adding elements
+    /// - Parameter item: added element
+    public static func add(_ item: RSDevPanelFastAdd) {
+        RSDevPanel.shared.addElement(item.element)
     }
 
     // MARK: - Internal static functions
