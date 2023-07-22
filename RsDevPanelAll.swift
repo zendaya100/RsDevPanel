@@ -84,6 +84,7 @@ enum RDDevPanelDataFlow {
 
 // DEV: check ios14
 // DEV: makescript, swiftlint
+
 import UIKit
 import SnapKit
 
@@ -1405,6 +1406,12 @@ class RSDevPanelView: RSDevPanelBaseView {
 
     private let infoView = RSDevPanelInfoView()
 
+    private let emptyView: UIView = {
+        let label = UILabel()
+        label.text = "No elements"
+        return label
+    }()
+
     private var currentOrigin: CGPoint?
     private var dragStartOrigin: CGPoint = .zero
     private var rootTopConstraint: Constraint?
@@ -1454,13 +1461,19 @@ class RSDevPanelView: RSDevPanelBaseView {
         layer.shadowRadius = 5
         layer.shadowOpacity = 0.15
         layer.shadowOffset = .zero
+        setEmptyState()
     }
 
     // MARK: - Internal functions
 
     func set(items: [UIView]) {
         elementsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        items.forEach(elementsStackView.addArrangedSubview)
+        // DEV: refactor empty state
+        if items.isEmpty {
+            setEmptyState()
+        } else {
+            items.forEach(elementsStackView.addArrangedSubview)
+        }
     }
 
     func show() {
@@ -1492,6 +1505,10 @@ class RSDevPanelView: RSDevPanelBaseView {
     }
 
     // MARK: - Private functions
+
+    private func setEmptyState() {
+        elementsStackView.addArrangedSubview(emptyView)
+    }
 
     private func getPanelOriginPoint() -> CGPoint {
         if let origin = currentOrigin {
