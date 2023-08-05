@@ -61,11 +61,11 @@ class SomeClass: UIViewController {
     override func viewDidLoad() {
         RSDevPanel.add(.button(.init(title: "Say hello", action: {
             print("Hello")
-        }), self))
+        })), self)
         RSDevPanel.shared.simpleStorage["name"] = "Joen Doe"
         RSDevPanel.add(.button(.init(title: "Print name", action: {
             print(RSDevPanel.shared.simpleStorage["name"])
-        }), self))
+        })), self)
 
         // Show panel
         RSDevPanel.shared.toggleShow()
@@ -102,22 +102,31 @@ let isHidden = RSDevPanel.shared.simpleStorage["isHidden"] as? Bool
 // The shortest method without alias
 RSDevPanel.add(.button(.init(title: "Title", action: {
     print("action")
-}), self))
+})), self)
+
+// Same thing, but adding an array of elements
+RSDevPanel.add([
+    // elements:
+    // .button
+    // .button
+], self)
 
 // You can use an alias for RSDevPanel
 RSDP.add(.button(.init(title: "Title", action: {
     print("action")
-}), self))
-
-// A more complete method with singleton access but still via the fast add method
-RSDevPanel.shared.add(.button(.init(title: "Title", action: {
-    print("action")
-}), self))
+})), self)
 
 // Complete method for adding an element
 RSDevPanel.shared.addElement(RSDevPanelButtonElement(RSDevPanelButtonElementConfig(title: "Title", action: {
     print("action")
 }), holder: self))
+
+// Same thing, but adding an array of elements
+RSDevPanel.shared.addElements([
+    // elements
+    // RSDevPanelButtonElement.init
+    // RSDevPanelButtonElement.init
+])
 ```
 
 ## Creating your own element
@@ -142,8 +151,8 @@ class MyTotoro: RSDevPanelBaseElement {
 
 // Additionally, you can extend the RSDevPanelFastAdd class to quickly add an element
 extension RSDevPanelFastAdd {
-    static func myTotoro(holder: AnyObject) -> RSDevPanelFastAdd {
-        let element = MyTotoro(holder: holder)
+    static func myTotoro() -> RSDevPanelFastAdd {
+        let element = MyTotoro(holder: nil)
         return Self(element: element)
     }
 }

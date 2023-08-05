@@ -24,14 +24,14 @@ final class SecondViewController: BaseController {
     private func configureDevPanel() {
         RSDevPanel.add(.button(.init(title: "Make yellow", action: { [weak self] in
             self?.view.backgroundColor = .yellow
-        }), self))
+        })), self)
 
         RSDevPanel.add(.button(.init(title: "Close VC2", action: { [weak self] in
             self?.dismiss(animated: true)
-        }), self))
+        })), self)
 
         // Custom created element
-        RSDevPanel.add(.myTotoro(holder: self))
+        RSDevPanel.add(.myTotoro(), self)
     }
 }
 
@@ -57,8 +57,8 @@ class MyTotoro: RSDevPanelBaseElement {
 
 // Additionally, you can extend the RSDevPanelFastAdd class to quickly add an element
 extension RSDevPanelFastAdd {
-    static func myTotoro(holder: AnyObject) -> RSDevPanelFastAdd {
-        let element = MyTotoro(holder: holder)
+    static func myTotoro() -> RSDevPanelFastAdd {
+        let element = MyTotoro(holder: nil)
         return Self(element: element)
     }
 }

@@ -15,40 +15,36 @@ public struct RSDevPanelFastAdd {
     /// Button element 
     /// - Parameters:
     ///   - config: configuration
-    ///   - holder: element holder
     /// - Returns: Element to be added
-    public static func button(_ config: RSDevPanelButtonElementConfig, _ holder: AnyObject) -> RSDevPanelFastAdd {
-        let element = RSDevPanelButtonElement(config, holder: holder)
+    public static func button(_ config: RSDevPanelButtonElementConfig) -> RSDevPanelFastAdd {
+        let element = RSDevPanelButtonElement(config, holder: nil)
         return Self(element: element)
     }
 
     /// Group of horizontal buttons
     /// - Parameters:
     ///   - configs: configurations
-    ///   - holder: element holder
     /// - Returns: Element to be added
-    public static func keys(_ configs: [RSDevPanelButtonElementConfig], _ holder: AnyObject) -> RSDevPanelFastAdd {
-        let element = RSDevPanelKeysElement(configs, holder: holder)
+    public static func keys(_ configs: [RSDevPanelButtonElementConfig]) -> RSDevPanelFastAdd {
+        let element = RSDevPanelKeysElement(configs, holder: nil)
         return Self(element: element)
     }
 
     /// Slider element
     /// - Parameters:
     ///   - config: configuration
-    ///   - holder: element holder
     /// - Returns: Element to be added
-    public static func slider(_ config: RSDevPanelSliderElementConfig, _ holder: AnyObject) -> RSDevPanelFastAdd {
-        let element = RSDevPanelSliderElement(config, holder: holder)
+    public static func slider(_ config: RSDevPanelSliderElementConfig) -> RSDevPanelFastAdd {
+        let element = RSDevPanelSliderElement(config, holder: nil)
         return Self(element: element)
     }
 
     /// News element
     /// - Parameters:
     ///   - config: configuration
-    ///   - holder: element holder
     /// - Returns: Element to be added
-    public static func news(_ config: RSDevPanelNewsElementConfig, _ holder: AnyObject) -> RSDevPanelFastAdd {
-        let element = RSDevPanelNewsElement(config: config, holder: holder)
+    public static func news(_ config: RSDevPanelNewsElementConfig) -> RSDevPanelFastAdd {
+        let element = RSDevPanelNewsElement(config: config, holder: nil)
         return Self(element: element)
     }
 }

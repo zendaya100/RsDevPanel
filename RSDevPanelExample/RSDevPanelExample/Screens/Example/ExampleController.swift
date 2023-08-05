@@ -10,6 +10,8 @@ class ExampleController: BaseController {
 
     private let customView = ExampleView()
 
+    // MARK: - Overrides
+
     override func loadView() {
         view = customView
     }
@@ -18,9 +20,16 @@ class ExampleController: BaseController {
         configure()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        RSDevPanel.shared.show()
+    }
+
     override func configureNavBar() {
         title = "Example VC"
     }
+
+    // MARK: - Private functions
 
     private func configure() {
         // full method add element
@@ -30,10 +39,6 @@ class ExampleController: BaseController {
         }), holder: self))
 
         // shot method add element
-        RSDP.add(.news(.init(source: .engadget, count: 2), self))
-
-        DispatchQueue.main.asyncAfter(deadline: .now()+0.2) {
-            RSDevPanel.shared.toggleShow()
-        }
+        RSDP.add(.news(.init(source: .engadget, count: 2)), self)
     }
 }
