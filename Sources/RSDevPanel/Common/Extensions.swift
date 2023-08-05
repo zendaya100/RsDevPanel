@@ -3,9 +3,7 @@
 //
 
 // DEV: check ios14
-// DEV: makescript, swiftlint
-// swiftlint:disable duplicate_imports
-// swiftlint:disable file_length
+// DEV: geenrate one file script, swiftlint
 
 import UIKit
 import SnapKit

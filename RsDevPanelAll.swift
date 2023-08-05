@@ -1,8 +1,23 @@
 //
-//  RDDevPanelDataFlow.swift
+//  RSDevPanelBuilder.swift
 //
 
 // swiftlint:disable all
+import Foundation
+
+final class RSDevPanelBuilder {
+    func build() -> RSDevPanel {
+        let presenter = RDDevPanelPresenter()
+        let interactor = RDDevPanelInteractor(presenter: presenter)
+        let controller = RSDevPanel(interactor: interactor)
+        presenter.controller = controller
+        return controller
+    }
+}
+//
+//  RDDevPanelDataFlow.swift
+//
+
 import UIKit
 
 enum RDDevPanelDataFlow {
@@ -69,21 +84,28 @@ enum RDDevPanelDataFlow {
 
     enum ViewModel {
         case items([UIView])
-        case show
-        case hide
+        case panelShow(Bool)
         case bringToFront
-        case infoShow
-        case infoHide
+        case infoShow(Bool)
         case infoText(String)
     }
     
+}
+//
+//  Constants.swift
+//
+
+import Foundation
+
+enum Constants {
+    static let logPrefix: String = "!!! RSDevPanel"
 }
 //
 //  Extensions.swift
 //
 
 // DEV: check ios14
-// DEV: makescript, swiftlint
+// DEV: geenrate one file script, swiftlint
 
 import UIKit
 import SnapKit
@@ -101,6 +123,109 @@ extension UIWindow {
             .first?
             .windows
             .first(where: \.isKeyWindow)
+    }
+}
+//
+//  RSDevPanelTools.swift
+//
+
+import Foundation
+
+/// Вспомогательные инструменты
+public enum RSDevPanelTools {
+
+    /// Convert json string to json object
+    /// - Parameter jsonString: json string
+    /// - Returns: object
+    public static func jsonObject(from jsonString: String) -> Any? {
+        let jsonString = jsonString.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let data = jsonString.data(using: .utf8) else {
+            return nil
+        }
+
+        do {
+            return try JSONSerialization.jsonObject(with: data)
+        } catch {
+            RSDevPanel.log(#function, error)
+            return nil
+        }
+    }
+}
+//
+//  RSSimpleStorage.swift
+//
+
+import Foundation
+
+/// Simple data storage (in ram memory)
+final public class RSSimpleStorage {
+    class TypeNotDefined {}
+
+    /// Subscript for Dictionary
+    public subscript(key: String) -> Any? {
+        get {
+            return dict[key]
+        }
+        set(newValue) {
+            dict[key] = newValue
+        }
+    }
+
+    /// Dictionary
+    public var dict: [String: Any] = [:] {
+        didSet { logDict() }
+    }
+
+    // MARK: - Fast variables
+    
+    public var any1: Any = TypeNotDefined() {
+        didSet { log(nameId: 1, value: any1) }
+    }
+
+    public var any2: Any = TypeNotDefined() {
+        didSet { log(nameId: 2, value: any2) }
+    }
+
+    public var any3: Any = TypeNotDefined() {
+        didSet { log(nameId: 3, value: any3) }
+    }
+
+    public var any4: Any = TypeNotDefined() {
+        didSet { log(nameId: 4, value: any4) }
+    }
+
+    public var any5: Any = TypeNotDefined() {
+        didSet { log(nameId: 5, value: any5) }
+    }
+
+    public var any6: Any = TypeNotDefined() {
+        didSet { log(nameId: 6, value: any6) }
+    }
+
+    public var any7: Any = TypeNotDefined() {
+        didSet { log(nameId: 7, value: any7) }
+    }
+
+    public var any8: Any = TypeNotDefined() {
+        didSet { log(nameId: 8, value: any8) }
+    }
+
+    public var any9: Any = TypeNotDefined() {
+        didSet { log(nameId: 9, value: any9) }
+    }
+
+    public var any10: Any = TypeNotDefined() {
+        didSet { log(nameId: 10, value: any10) }
+    }
+
+    // MARK: - Private functions
+
+    private func log(nameId: Int, value: Any) {
+        RSDevPanel.log("SimpleStorage. Set Any\(nameId) (\(type(of: value)))", value)
+    }
+
+    private func logDict() {
+        RSDevPanel.log("SimpleStorage. Update dict", dict)
     }
 }
 //
@@ -132,7 +257,7 @@ public class RSDevPanelKeysElement: RSDevPanelBaseElement {
     /// - Parameters:
     ///   - configs: button configurations
     ///   - holder: element holder
-    public init(_ configs: [RSDevPanelButtonElementConfig], holder: AnyObject) {
+    public init(_ configs: [RSDevPanelButtonElementConfig], holder: AnyObject?) {
         self.configs = configs
         super.init(holder: holder)
         createButtons()
@@ -177,7 +302,7 @@ public class RSDevPanelSliderElement: RSDevPanelBaseElement {
     /// - Parameters:
     ///   - config: slider configuration
     ///   - holder: element holder
-    public init(_ config: RSDevPanelSliderElementConfig, holder: AnyObject) {
+    public init(_ config: RSDevPanelSliderElementConfig, holder: AnyObject?) {
         self.config = config
         super.init(holder: holder)
         view.delegate = self
@@ -327,7 +452,7 @@ public class RSDevPanelButtonElement: RSDevPanelBaseElement {
     /// - Parameters:
     ///   - config: button configuration
     ///   - holder: element holder
-    public init(_ config: RSDevPanelButtonElementConfig, holder: AnyObject) {
+    public init(_ config: RSDevPanelButtonElementConfig, holder: AnyObject?) {
         self.config = config
         super.init(holder: holder)
         view.set(config: config)
@@ -688,7 +813,7 @@ public class RSDevPanelNewsElement: RSDevPanelBaseElement {
     /// - Parameters:
     ///   - config: news configuration
     ///   - holder: element holder
-    public init(config: RSDevPanelNewsElementConfig, holder: AnyObject) {
+    public init(config: RSDevPanelNewsElementConfig, holder: AnyObject?) {
         self.source = config.source
         super.init(holder: holder)
         xmldelegate.delegate = self
@@ -884,7 +1009,7 @@ open class RSDevPanelBaseElement {
 
     /// Base class of the devpanel element initializer
     /// - Parameter holder: the element will be displayed as long as its holder exists
-    public init(holder: AnyObject) {
+    public init(holder: AnyObject?) {
         self.holder = holder
     }
 
@@ -920,14 +1045,7 @@ public class RSDevPanel {
     // MARK: - Public variables
 
     /// Class instance
-    public static let shared: RSDevPanel = {
-        // DEV: builder
-        let presenter = RDDevPanelPresenter()
-        let interactor = RDDevPanelInteractor(presenter: presenter)
-        let controller = RSDevPanel(interactor: interactor)
-        presenter.controller = controller
-        return controller
-    }()
+    public static let shared: RSDevPanel = RSDevPanelBuilder().build()
 
     /// Simple data storage
     public let simpleStorage = RSSimpleStorage()
@@ -990,13 +1108,6 @@ public class RSDevPanel {
         addElement(item.element)
     }
 
-    // MARK: - Static public functions
-
-    /// Method for quickly adding elements
-    /// - Parameter item: added element
-    public static func add(_ item: RSDevPanelFastAdd) {
-        RSDevPanel.shared.addElement(item.element)
-    }
 
     // MARK: - Internal static functions
 
@@ -1005,36 +1116,54 @@ public class RSDevPanel {
     }
 }
 
+// MARK: - Statict fast methods
+
+extension RSDevPanel {
+    /// Method for quickly adding one element
+    /// - Parameters:
+    ///   - item: element
+    ///   - holder: element holder
+    public static func add(_ item: RSDevPanelFastAdd, _ holder: AnyObject) {
+        item.element.holder = holder
+        RSDevPanel.shared.addElement(item.element)
+    }
+
+    /// Method for quickly adding many elements
+    /// - Parameters:
+    ///   - items: element
+    ///   - holder: element holder
+    public static func add(_ items: [RSDevPanelFastAdd], _ holder: AnyObject) {
+        items.forEach {
+            add($0, holder)
+        }
+    }
+}
+
+// MARK: - RSDevPanelDisplayLogic
+
 extension RSDevPanel: RSDevPanelDisplayLogic {
     func display(state: RDDevPanelDataFlow.ViewModel) {
         switch state {
         case .items(let items):
             view.set(items: items)
-        case .show:
-            view.show()
-        case .hide:
-            view.hide()
+        case .panelShow(let isShow):
+            isShow ? view.show() : view.hide()
         case .bringToFront:
             view.bringToFront()
-        case .infoShow:
-            view.infoView(isShow: true)
-        case .infoHide:
-            view.infoView(isShow: false)
+        case .infoShow(let isShow):
+            view.infoView(isShow: isShow)
         case .infoText(let text):
             view.infoView(text: text)
         }
     }
 }
 
+// MARK: - RSDevPanelViewDelegate
+
 extension RSDevPanel: RSDevPanelViewDelegate {
     func viewClosePressed() {
         interactor.request(RDDevPanelDataFlow.Hide.Request())
     }
-}
-
-// DEV: ref
-fileprivate enum Constants {
-    static let logPrefix: String = "!!! RSDevPanel"
 }
 //
 //  RSDevPanelFastAdd.swift
@@ -1053,40 +1182,36 @@ public struct RSDevPanelFastAdd {
     /// Button element 
     /// - Parameters:
     ///   - config: configuration
-    ///   - holder: element holder
     /// - Returns: Element to be added
-    public static func button(_ config: RSDevPanelButtonElementConfig, _ holder: AnyObject) -> RSDevPanelFastAdd {
-        let element = RSDevPanelButtonElement(config, holder: holder)
+    public static func button(_ config: RSDevPanelButtonElementConfig) -> RSDevPanelFastAdd {
+        let element = RSDevPanelButtonElement(config, holder: nil)
         return Self(element: element)
     }
 
     /// Group of horizontal buttons
     /// - Parameters:
     ///   - configs: configurations
-    ///   - holder: element holder
     /// - Returns: Element to be added
-    public static func keys(_ configs: [RSDevPanelButtonElementConfig], _ holder: AnyObject) -> RSDevPanelFastAdd {
-        let element = RSDevPanelKeysElement(configs, holder: holder)
+    public static func keys(_ configs: [RSDevPanelButtonElementConfig]) -> RSDevPanelFastAdd {
+        let element = RSDevPanelKeysElement(configs, holder: nil)
         return Self(element: element)
     }
 
     /// Slider element
     /// - Parameters:
     ///   - config: configuration
-    ///   - holder: element holder
     /// - Returns: Element to be added
-    public static func slider(_ config: RSDevPanelSliderElementConfig, _ holder: AnyObject) -> RSDevPanelFastAdd {
-        let element = RSDevPanelSliderElement(config, holder: holder)
+    public static func slider(_ config: RSDevPanelSliderElementConfig) -> RSDevPanelFastAdd {
+        let element = RSDevPanelSliderElement(config, holder: nil)
         return Self(element: element)
     }
 
     /// News element
     /// - Parameters:
     ///   - config: configuration
-    ///   - holder: element holder
     /// - Returns: Element to be added
-    public static func news(_ config: RSDevPanelNewsElementConfig, _ holder: AnyObject) -> RSDevPanelFastAdd {
-        let element = RSDevPanelNewsElement(config: config, holder: holder)
+    public static func news(_ config: RSDevPanelNewsElementConfig) -> RSDevPanelFastAdd {
+        let element = RSDevPanelNewsElement(config: config, holder: nil)
         return Self(element: element)
     }
 }
@@ -1116,12 +1241,12 @@ final class RDDevPanelPresenter: RDDevPanelPresentationLogic {
     }
 
     func present(_ response: RDDevPanelDataFlow.Show.Response) {
-        controller?.display(state: .show)
+        controller?.display(state: .panelShow(true))
 
     }
 
     func present(_ response: RDDevPanelDataFlow.Hide.Response) {
-        controller?.display(state: .hide)
+        controller?.display(state: .panelShow(false))
     }
 
     func present(_ response: RDDevPanelDataFlow.Toggle.Response) {
@@ -1144,18 +1269,12 @@ final class RDDevPanelPresenter: RDDevPanelPresentationLogic {
 
     func present(_ response: RDDevPanelDataFlow.InfoView.Response) {
         if let isShow = response.isShow {
-            controller?.display(state: isShow ? .infoShow : .infoHide)
+            controller?.display(state: .infoShow(isShow))
         }
         if let infoText = response.text {
             controller?.display(state: .infoText(infoText))
         }
     }
-
-    // MARK: - Private functions
-
-//    private func prepareViews(from elements: [RSDevPanelBaseElement]) -> [UIView] {
-//        return elements.map { $0.getView() }
-//    }
 }
 //
 //  RSDevPanelViewAppearance.swift
@@ -1554,109 +1673,6 @@ class RSDevPanelView: RSDevPanelBaseView {
 
 }
 //
-//  RSDevPanelTools.swift
-//
-
-import Foundation
-
-/// Вспомогательные инструменты
-public enum RSDevPanelTools {
-
-    /// Convert json string to json object
-    /// - Parameter jsonString: json string
-    /// - Returns: object
-    public static func jsonObject(from jsonString: String) -> Any? {
-        let jsonString = jsonString.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard let data = jsonString.data(using: .utf8) else {
-            return nil
-        }
-
-        do {
-            return try JSONSerialization.jsonObject(with: data)
-        } catch {
-            RSDevPanel.log(#function, error)
-            return nil
-        }
-    }
-}
-//
-//  RSSimpleStorage.swift
-//
-
-import Foundation
-
-/// Simple data storage (in ram memory)
-final public class RSSimpleStorage {
-    class TypeNotDefined {}
-
-    /// Subscript for Dictionary
-    public subscript(key: String) -> Any? {
-        get {
-            return dict[key]
-        }
-        set(newValue) {
-            dict[key] = newValue
-        }
-    }
-
-    /// Dictionary
-    public var dict: [String: Any] = [:] {
-        didSet { logDict() }
-    }
-
-    // MARK: - Fast variables
-    
-    public var any1: Any = TypeNotDefined() {
-        didSet { log(nameId: 1, value: any1) }
-    }
-
-    public var any2: Any = TypeNotDefined() {
-        didSet { log(nameId: 2, value: any2) }
-    }
-
-    public var any3: Any = TypeNotDefined() {
-        didSet { log(nameId: 3, value: any3) }
-    }
-
-    public var any4: Any = TypeNotDefined() {
-        didSet { log(nameId: 4, value: any4) }
-    }
-
-    public var any5: Any = TypeNotDefined() {
-        didSet { log(nameId: 5, value: any5) }
-    }
-
-    public var any6: Any = TypeNotDefined() {
-        didSet { log(nameId: 6, value: any6) }
-    }
-
-    public var any7: Any = TypeNotDefined() {
-        didSet { log(nameId: 7, value: any7) }
-    }
-
-    public var any8: Any = TypeNotDefined() {
-        didSet { log(nameId: 8, value: any8) }
-    }
-
-    public var any9: Any = TypeNotDefined() {
-        didSet { log(nameId: 9, value: any9) }
-    }
-
-    public var any10: Any = TypeNotDefined() {
-        didSet { log(nameId: 10, value: any10) }
-    }
-
-    // MARK: - Private functions
-
-    private func log(nameId: Int, value: Any) {
-        RSDevPanel.log("SimpleStorage. Set Any\(nameId) (\(type(of: value)))", value)
-    }
-
-    private func logDict() {
-        RSDevPanel.log("SimpleStorage. Update dict", dict)
-    }
-}
-//
 //  RDDevPanelInteractor.swift
 //
 
@@ -1759,11 +1775,13 @@ final class RDDevPanelInteractor: RDDevPanelInteractorBusinessLogic {
     }
 
     private func startCleanUpTimer() {
-        cleanUpTimer = Timer.scheduledTimer(timeInterval: 0.1,
-                                            target: self,
-                                            selector: #selector(timerCheck),
-                                            userInfo: nil,
-                                            repeats: true)
+        let timer = Timer.scheduledTimer(timeInterval: 0.1,
+                                         target: self,
+                                         selector: #selector(timerCheck),
+                                         userInfo: nil,
+                                         repeats: true)
+        RunLoop.main.add(timer, forMode: .common)
+        cleanUpTimer = timer
     }
 
     private func stopCleanUpTimer() {

@@ -19,7 +19,7 @@ public class RSDevPanelButtonElement: RSDevPanelBaseElement {
     /// - Parameters:
     ///   - config: button configuration
     ///   - holder: element holder
-    public init(_ config: RSDevPanelButtonElementConfig, holder: AnyObject) {
+    public init(_ config: RSDevPanelButtonElementConfig, holder: AnyObject?) {
         self.config = config
         super.init(holder: holder)
         view.set(config: config)

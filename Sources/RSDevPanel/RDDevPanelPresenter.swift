@@ -24,12 +24,12 @@ final class RDDevPanelPresenter: RDDevPanelPresentationLogic {
     }
 
     func present(_ response: RDDevPanelDataFlow.Show.Response) {
-        controller?.display(state: .show)
+        controller?.display(state: .panelShow(true))
 
     }
 
     func present(_ response: RDDevPanelDataFlow.Hide.Response) {
-        controller?.display(state: .hide)
+        controller?.display(state: .panelShow(false))
     }
 
     func present(_ response: RDDevPanelDataFlow.Toggle.Response) {
@@ -52,16 +52,10 @@ final class RDDevPanelPresenter: RDDevPanelPresentationLogic {
 
     func present(_ response: RDDevPanelDataFlow.InfoView.Response) {
         if let isShow = response.isShow {
-            controller?.display(state: isShow ? .infoShow : .infoHide)
+            controller?.display(state: .infoShow(isShow))
         }
         if let infoText = response.text {
             controller?.display(state: .infoText(infoText))
         }
     }
-
-    // MARK: - Private functions
-
-//    private func prepareViews(from elements: [RSDevPanelBaseElement]) -> [UIView] {
-//        return elements.map { $0.getView() }
-//    }
 }

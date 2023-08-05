@@ -21,7 +21,7 @@ public class RSDevPanelNewsElement: RSDevPanelBaseElement {
     /// - Parameters:
     ///   - config: news configuration
     ///   - holder: element holder
-    public init(config: RSDevPanelNewsElementConfig, holder: AnyObject) {
+    public init(config: RSDevPanelNewsElementConfig, holder: AnyObject?) {
         self.source = config.source
         super.init(holder: holder)
         xmldelegate.delegate = self

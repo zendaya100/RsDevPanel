@@ -53,34 +53,37 @@ final class ExampleView: BaseView {
 
     private func configureDevPanel() {
 
-
-        RSDevPanel.add(.button(RSDevPanelButtonElementConfig(title: "Add item", action: { [weak self] in
+        // Sigle fast add
+        RSDevPanel.add(.button(.init(title: "Add item", action: { [weak self] in
             self?.addItem()
-        }), self))
+        })), self)
 
+        // Batch fast add
+        RSDevPanel.add([
+            .button(.init(title: "Remove item", action: { [weak self] in
+                self?.removeItem()
+            })),
 
-        RSDevPanel.add(.button(RSDevPanelButtonElementConfig(title: "Remove item", action: { [weak self] in
-            self?.removeItem()
-        }), self))
+            .slider(RSDevPanelSliderElementConfig(title: "Size (continuous)",
+                                                                 currentValue: 17,
+                                                                 minValue: 6,
+                                                                 maxValue: 32,
+                                                                 step: 1,
+                                                                 isContinuous: true, onChange: { [weak self] val in
+                self?.size(val)
+            })),
 
-        RSDevPanel.add(.slider(RSDevPanelSliderElementConfig(title: "Size (continuous)",
-                                                             currentValue: 17,
-                                                             minValue: 6,
-                                                             maxValue: 32,
-                                                             step: 1,
-                                                             isContinuous: true, onChange: { [weak self] val in
-            self?.size(val)
-        }), self))
+            .slider(RSDevPanelSliderElementConfig(title: "Size (not continuous)",
+                                                                 currentValue: 17,
+                                                                 minValue: 6,
+                                                                 maxValue: 32,
+                                                                 step: 1,
+                                                                 isContinuous: false, onChange: { [weak self] val in
+                self?.size(val)
+            }))
+        ], self)
 
-        RSDevPanel.add(.slider(RSDevPanelSliderElementConfig(title: "Size (not continuous)",
-                                                             currentValue: 17,
-                                                             minValue: 6,
-                                                             maxValue: 32,
-                                                             step: 1,
-                                                             isContinuous: false, onChange: { [weak self] val in
-            self?.size(val)
-        }), self))
-
+        // Regular
         RSDevPanel.shared.addElement(RSDevPanelKeysElement([
             .init(title: "Clear", backgroungColor: .red, action: { [weak self] in
                 self?.clear()

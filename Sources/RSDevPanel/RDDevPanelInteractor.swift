@@ -101,11 +101,13 @@ final class RDDevPanelInteractor: RDDevPanelInteractorBusinessLogic {
     }
 
     private func startCleanUpTimer() {
-        cleanUpTimer = Timer.scheduledTimer(timeInterval: 0.1,
-                                            target: self,
-                                            selector: #selector(timerCheck),
-                                            userInfo: nil,
-                                            repeats: true)
+        let timer = Timer.scheduledTimer(timeInterval: 0.1,
+                                         target: self,
+                                         selector: #selector(timerCheck),
+                                         userInfo: nil,
+                                         repeats: true)
+        RunLoop.main.add(timer, forMode: .common)
+        cleanUpTimer = timer
     }
 
     private func stopCleanUpTimer() {

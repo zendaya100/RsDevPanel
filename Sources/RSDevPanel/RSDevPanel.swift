@@ -13,14 +13,7 @@ public class RSDevPanel {
     // MARK: - Public variables
 
     /// Class instance
-    public static let shared: RSDevPanel = {
-        // DEV: builder
-        let presenter = RDDevPanelPresenter()
-        let interactor = RDDevPanelInteractor(presenter: presenter)
-        let controller = RSDevPanel(interactor: interactor)
-        presenter.controller = controller
-        return controller
-    }()
+    public static let shared: RSDevPanel = RSDevPanelBuilder().build()
 
     /// Simple data storage
     public let simpleStorage = RSSimpleStorage()
@@ -77,20 +70,6 @@ public class RSDevPanel {
         }
     }
 
-    /// Method for quickly adding elements
-    /// - Parameter item: added element
-    public func add(_ item: RSDevPanelFastAdd) {
-        addElement(item.element)
-    }
-
-    // MARK: - Static public functions
-
-    /// Method for quickly adding elements
-    /// - Parameter item: added element
-    public static func add(_ item: RSDevPanelFastAdd) {
-        RSDevPanel.shared.addElement(item.element)
-    }
-
     // MARK: - Internal static functions
 
     static func log(_ arg: Any...) {
@@ -98,34 +77,52 @@ public class RSDevPanel {
     }
 }
 
+// MARK: - Statict fast methods
+
+extension RSDevPanel {
+    /// Method for quickly adding one element
+    /// - Parameters:
+    ///   - item: element
+    ///   - holder: element holder
+    public static func add(_ item: RSDevPanelFastAdd, _ holder: AnyObject) {
+        item.element.holder = holder
+        RSDevPanel.shared.addElement(item.element)
+    }
+
+    /// Method for quickly adding many elements
+    /// - Parameters:
+    ///   - items: element
+    ///   - holder: element holder
+    public static func add(_ items: [RSDevPanelFastAdd], _ holder: AnyObject) {
+        items.forEach {
+            add($0, holder)
+        }
+    }
+}
+
+// MARK: - RSDevPanelDisplayLogic
+
 extension RSDevPanel: RSDevPanelDisplayLogic {
     func display(state: RDDevPanelDataFlow.ViewModel) {
         switch state {
         case .items(let items):
             view.set(items: items)
-        case .show:
-            view.show()
-        case .hide:
-            view.hide()
+        case .panelShow(let isShow):
+            isShow ? view.show() : view.hide()
         case .bringToFront:
             view.bringToFront()
-        case .infoShow:
-            view.infoView(isShow: true)
-        case .infoHide:
-            view.infoView(isShow: false)
+        case .infoShow(let isShow):
+            view.infoView(isShow: isShow)
         case .infoText(let text):
             view.infoView(text: text)
         }
     }
 }
 
+// MARK: - RSDevPanelViewDelegate
+
 extension RSDevPanel: RSDevPanelViewDelegate {
     func viewClosePressed() {
         interactor.request(RDDevPanelDataFlow.Hide.Request())
     }
-}
-
-// DEV: ref
-fileprivate enum Constants {
-    static let logPrefix: String = "!!! RSDevPanel"
 }

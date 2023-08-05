@@ -68,11 +68,9 @@ enum RDDevPanelDataFlow {
 
     enum ViewModel {
         case items([UIView])
-        case show
-        case hide
+        case panelShow(Bool)
         case bringToFront
-        case infoShow
-        case infoHide
+        case infoShow(Bool)
         case infoText(String)
     }
     

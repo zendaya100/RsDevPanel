@@ -28,7 +28,7 @@ open class RSDevPanelBaseElement {
 
     /// Base class of the devpanel element initializer
     /// - Parameter holder: the element will be displayed as long as its holder exists
-    public init(holder: AnyObject) {
+    public init(holder: AnyObject?) {
         self.holder = holder
     }
 

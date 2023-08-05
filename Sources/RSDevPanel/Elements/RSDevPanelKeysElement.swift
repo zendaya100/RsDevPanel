@@ -27,7 +27,7 @@ public class RSDevPanelKeysElement: RSDevPanelBaseElement {
     /// - Parameters:
     ///   - configs: button configurations
     ///   - holder: element holder
-    public init(_ configs: [RSDevPanelButtonElementConfig], holder: AnyObject) {
+    public init(_ configs: [RSDevPanelButtonElementConfig], holder: AnyObject?) {
         self.configs = configs
         super.init(holder: holder)
         createButtons()

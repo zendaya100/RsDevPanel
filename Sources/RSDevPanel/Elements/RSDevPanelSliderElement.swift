@@ -19,7 +19,7 @@ public class RSDevPanelSliderElement: RSDevPanelBaseElement {
     /// - Parameters:
     ///   - config: slider configuration
     ///   - holder: element holder
-    public init(_ config: RSDevPanelSliderElementConfig, holder: AnyObject) {
+    public init(_ config: RSDevPanelSliderElementConfig, holder: AnyObject?) {
         self.config = config
         super.init(holder: holder)
         view.delegate = self
