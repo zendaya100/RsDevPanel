@@ -5,6 +5,7 @@
 import UIKit
 import RSDevPanel
 
+// DEV: make example app better like source lib
 class ExampleController: BaseController {
 
     private let customView = ExampleView()
@@ -31,7 +32,6 @@ class ExampleController: BaseController {
         // shot method add element
         RSDP.add(.news(.init(source: .engadget, count: 2), self))
 
-        // DEV: make example app better
         DispatchQueue.main.asyncAfter(deadline: .now()+0.2) {
             RSDevPanel.shared.toggleShow()
         }

@@ -103,16 +103,12 @@ extension RSDevPanel: RSDevPanelDisplayLogic {
         switch state {
         case .items(let items):
             view.set(items: items)
-        case .show:
-            view.show()
-        case .hide:
-            view.hide()
+        case .panelShow(let isShow):
+            isShow ? view.show() : view.hide()
         case .bringToFront:
             view.bringToFront()
-        case .infoShow:
-            view.infoView(isShow: true)
-        case .infoHide:
-            view.infoView(isShow: false)
+        case .infoShow(let isShow):
+            view.infoView(isShow: isShow)
         case .infoText(let text):
             view.infoView(text: text)
         }
